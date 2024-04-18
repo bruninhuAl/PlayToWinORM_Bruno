@@ -1,6 +1,6 @@
-const {Sequilize} = require("sequilize")
+const {Sequelize} = require("sequelize")
 
-const sequilize = new Sequilize(
+const sequelize = new Sequelize(
     process.env.DB_DATABASE,
     process.env.DB_USERNAME,
     process.env.DB_PASSWORD,
@@ -11,4 +11,4 @@ const sequilize = new Sequilize(
     }
 );
 
-module.exports = Sequelize;
+module.exports = sequelize
