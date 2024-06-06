@@ -5,8 +5,12 @@ const Usuario = require("./models/Usuario");
 
 const Jogo = require("./models/Jogo");
 
+const handlebars = require("express-handlebars");
 const express = require("express");
 const app = express();
+
+app.engine("handlebars", handlebars.engine());
+app.set("view engine", "handlebars");
 
 app.use(
     express.urlencoded({
@@ -17,7 +21,16 @@ app.use(
 app.use(express.json());
 
 app.get("/usuarios/novo", (req, res)=>{
-    res.sendFile(`${__dirname}/views/formUsuario.html`);
+    res.render(`formUsuario`);
+})
+
+app.get("/usuarios/novo", (req, res)=>{
+    res.render(`home`);
+})
+
+app.get("/usuarios/novo", (req, res)=>{
+    res.render(`usuarios`);
+    
 })
 
 app.get("/jogos/novo", (req, res)=>{
