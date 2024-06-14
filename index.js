@@ -1,81 +1,85 @@
 require("dotenv").config();
 const conn = require("./db/conn");
 
-const Usuario = require("./models/Usuario");
+const Usuario = require("./moldels/Usuario");
+const Jogo = require("./models/Jogo")
 
-const Jogo = require("./models/Jogo");
-
-const handlebars = require("express-handlebars");
 const express = require("express");
 const app = express();
 
+const handlebars = require ("express-handlebars")
+
 app.engine("handlebars", handlebars.engine());
+
 app.set("view engine", "handlebars");
 
-app.use(
-    express.urlencoded({
-        extended: true,
-    })
-)
+app.use(express.urlencoded({extended: true}));
 
 app.use(express.json());
 
-app.get("/usuarios/novo", (req, res)=>{
-    res.render(`formUsuario`);
-})
+app.get("/usuarios/novo", (req, res) => {
+    res.render('formUsuario');
+});
 
-app.get("/usuarios/novo", (req, res)=>{
-    res.render(`home`);
-})
+app.get("/", (req, res) => {
+    res.render('home');
+});
 
-app.get("/usuarios/novo", (req, res)=>{
-    res.render(`usuarios`);
-    
-})
+app.get("/usuarios", async (req, res) => {
+    const usuarios = await Usuario.findAll({ raw: true})
+    res.render('usuarios', {usuarios});
+});
 
-app.get("/jogos/novo", (req, res)=>{
-    res.sendFile(`${__dirname}/views/formJogo.html`);
-})
-
-app.post("/usuarios/novo", async (req, res)=>{
+app.post("/usuarios/novo", async (req, res) => {
     const dadosUsuario = {
         nickname: req.body.nickname,
-        nome: req.body,nome,
-    }
-
+        nome: req.body.nome,
+    };
     const usuario = await Usuario.create(dadosUsuario);
-    res.send("Usuario inserido sob o id " + usuario.id);
-})
+    res.send("Usuario inserido com o id: " + usuario.id)
+});
 
-app.post("/jogos/novo", async (req, res)=>{
+app.get("/jogos/novo", (req, res) => {
+    res.render('jogo');
+});
+
+app.post("/jogos/novo", async (rep, res) => {
     const dadosJogo = {
         titulo: req.body.titulo,
         descricao: req.body.descricao,
-        precoBase: req.body.precoBase,
-    }
-
+        precoB: req.body.precoB,
+    };
     const jogo = await Jogo.create(dadosJogo);
-    res.send("Jogo inserido sob o id " + jogo.id);
+    res.send("Jogo inserido com o id: " + jogo.id)
+});
+
+app.get("/usuarios/:id/atualizar", (req, res) => {
+    const id = req.params.id;
+    const usuario = Usuario.findByPk(id, { raw: true});
+    res.render("formUsuario"), { usuario };
 })
 
-app.listen(8000, ()=>{
-    console.log("Server rodando!");
+app.listen(8000, () => {
+    console.log("rodandinho :P");
 });
 
 conn
     .sync()
+    .authenticate()
     .then(() => {
-        console.log("Conectado e sincronizado com o banco de dados com sucesso!");
+       console.log("conectado e sync ao db :P");
     })
     .catch((err) => {
-        console.log("Ocorreu um erro: " + err);
+     console.log("erro :( " + err);
     });
 
-//conn
-//    .authenticate()
-//    .then(() => {
-//        console.log("Conectado ao banco de dados com sucesso!");
-//    })
-//    .catch((err) => {
-//        console.log("Ocorreu um erro: " + err);
-//    });
+
+
+// conn
+//   .authenticate()
+//  .then(() => {
+//       console.log("conectado ao db :P");
+// })
+//  .catch((err) => {
+//     console.log("erro :(" + err);
+//   });
