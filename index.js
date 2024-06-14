@@ -78,7 +78,7 @@ conn
 // conn
 //   .authenticate()
 //  .then(() => {
-//       console.log("conectado ao db :P");
+//       console.log("conectado ao db");
 // })
 //  .catch((err) => {
 //     console.log("erro :(" + err);
