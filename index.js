@@ -131,9 +131,40 @@ app.post("/usuarios/:id/novoCartao", async (req, res) => {
   res.redirect(`/usuarios/${id}/cartoes`);
 });
 
+
+// Rotas para conquistas
+
+// Ver cartões de conquistas
+
+app.get("/jogos/:id/conquistas", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const jogo = await Jogo.findByPk(id, { raw: true });
+
+  const conquistas = await Conquista.findAll({
+    raw: true,
+    where: { JogoId: id },
+  });
+
+  res.render("conquistas.handlebars", { jogo, conquistas });
+});
+
+app.post("/jogos/:id/novaConquista", async (req, res) => {
+  const id = parseInt(req.params.id);
+
+  const dadosConquista = {
+    titulo: req.body.titulo,
+    descricao: req.body.descricao,
+    JogoId: id,
+  };
+
+  await Conquista.create(dadosConquista);
+
+  res.redirect(`
+
+
 // Rotas para Jogos
 
-//Ver cartões de jogo
+// Ver cartões de jogo
 
 app.get("/jogos", async (req, res) => {
   const jogos = await Jogo.findAll({ raw: true });
@@ -193,14 +224,6 @@ app.post("/jogos/:id/update", async (req, res) => {
     res.send("Erro ao atualizar jogo");
   }
 });
-
-
-
-
-
-
-
-
 
 
 app.listen(8000, () => {
