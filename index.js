@@ -159,7 +159,16 @@ app.post("/jogos/:id/novaConquista", async (req, res) => {
 
   await Conquista.create(dadosConquista);
 
-  res.redirect(`
+  res.redirect(`/jogos/${id}/conquistas`);
+});
+
+
+app.get("/jogos/:id/novaConquista", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const jogo = await Jogo.findByPk(id, { raw: true });
+
+  res.render("formConquista", { jogo });
+});
 
 
 // Rotas para Jogos
